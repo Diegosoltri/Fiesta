@@ -252,7 +252,7 @@ export default function BaptismInvite() {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    attending: "sí",
+    attending: "si",
     guests: 0,
     message: "",
   });
@@ -798,9 +798,12 @@ export default function BaptismInvite() {
                   label="¿Asistirás?"
                   value={form.attending}
                   onChange={(v) => setForm((f) => ({ ...f, attending: v }))}
-                  options={[{ v: "sí" }, { v: "no" }]}
+                  options={[
+                    { v: "si", l: "Sí" },
+                    { v: "no", l: "No" },
+                  ]}
                 />
-                {CONFIG.allowCompanions && form.attending === "sí" && (
+                {CONFIG.allowCompanions && form.attending === "si" && (
                   <NumberField
                     label="Acompañantes"
                     min={0}
