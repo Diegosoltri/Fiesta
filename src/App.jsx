@@ -15,7 +15,7 @@ import { useMemo, useRef, useState, useEffect } from "react";
 // Te sugiero crear una carpeta /assets-bautizo para no confundirte.
 import fondo from './assets/foto4.jpg'; // <-- REEMPLAZA
 import fondo1 from "./assets/aurora1.jpeg"; // <-- REEMPLAZA
-import fondo2 from "./assets/aurora2.jpeg"; // <-- REEMPLAZA
+import fondo2 from "./assets/aurora10.jpeg"; // <-- REEMPLAZA
 import fondo3 from "./assets/aurora3.jpeg";
 import fondo4 from "./assets/aurora4.jpeg";
 import fondo5 from "./assets/aurora5.jpeg";
@@ -41,7 +41,7 @@ if (!VITE_SUPABASE_URL || !VITE_SUPABASE_ANON_KEY) {
 // Edita todos estos campos con la información de tu bautizo.
 const CONFIG = {
   title: "Aurora", // Nombre de la festejada
-  hostName: "Familia Gonzales Mena", // Nombre de los anfitriones (papás)
+  hostName: "Familia González Mena", // Nombre de los anfitriones (papás)
   parents: ["Amayranni Mena C.", "Fernando González B."],
   godparents: ["Mariana Sanchez X.", "Gael Mena C."],
   dateISO: "2026-02-22T12:00:00", // Fecha y hora del evento
@@ -69,8 +69,8 @@ const CONFIG = {
   hashtag: "BautizoDeAurora",
   // RSVP
   RSVP_ENDPOINT: "", // Pega tu URL de Formspree aquí si no usas Supabase
-  allowCompanions: false,
-  contactPhone: "+522221044312", // Teléfono de contacto para WhatsApp
+  allowCompanions: true,
+  contactPhone: "+522224908225", // Teléfono de contacto para WhatsApp
   // Enlace público que compartirás (para botón de WhatsApp)
   publicShareURL: "https://fiesta-dusky.vercel.app",
 };
@@ -253,7 +253,7 @@ export default function BaptismInvite() {
     name: "",
     phone: "",
     attending: "sí",
-    guests: 0, // siempre 0 para no romper el back
+    guests: 0,
     message: "",
   });
   const [status, setStatus] = useState("idle"); // idle | sending | ok | error
@@ -338,7 +338,7 @@ export default function BaptismInvite() {
       name: form.name,
       phone: form.phone,
       attending: form.attending,
-      guests: 0, // forzado
+      guests: CONFIG.allowCompanions ? Number(form.guests || 0) : 0,
       message: form.message,
       event: CONFIG.title,
       dateISO: CONFIG.dateISO,
@@ -383,7 +383,7 @@ export default function BaptismInvite() {
             name: form.name,
             phone: form.phone,
             attending: form.attending,
-            guests: 0,
+            guests: CONFIG.allowCompanions ? Number(form.guests || 0) : 0,
             message: form.message,
             ticket_id: ticketId,
           }),
@@ -800,6 +800,15 @@ export default function BaptismInvite() {
                   onChange={(v) => setForm((f) => ({ ...f, attending: v }))}
                   options={[{ v: "sí" }, { v: "no" }]}
                 />
+                {CONFIG.allowCompanions && form.attending === "sí" && (
+                  <NumberField
+                    label="Acompañantes"
+                    min={0}
+                    max={5}
+                    value={form.guests}
+                    onChange={(v) => setForm((f) => ({ ...f, guests: v }))}
+                  />
+                )}
               </div>
               <Textarea
                 label="Mensaje (opcional)"
