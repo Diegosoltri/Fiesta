@@ -259,6 +259,7 @@ export default function BaptismInvite() {
   const [status, setStatus] = useState("idle"); // idle | sending | ok | error
   const [sentTicket, setSentTicket] = useState(null);
   const [isWhatsAppConfirmOpen, setIsWhatsAppConfirmOpen] = useState(false);
+  const [isGiftOpen, setIsGiftOpen] = useState(false);
   useEffect(() => {
     if (status === "ok") {
       setIsWhatsAppConfirmOpen(true);
@@ -572,13 +573,21 @@ export default function BaptismInvite() {
           </div>
 
           <div className="mt-5 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={() => setIsMapOpen(true)}
-            className="rounded-xl px-4 py-2 border border-pink-300 text-pink-700 hover:bg-pink-50 transition"
-          >
-            Ubicación
-          </button>
+            <button
+              type="button"
+              onClick={() => setIsMapOpen(true)}
+              className="rounded-xl px-4 py-2 border border-pink-300 text-pink-700 hover:bg-pink-50 transition"
+            >
+              Ubicación
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsGiftOpen(true)}
+              className="rounded-xl px-4 py-2 border border-pink-300 text-pink-700 hover:bg-pink-50 transition inline-flex items-center gap-2"
+            >
+              <span className="text-lg leading-none">✉️</span>
+              Regalo
+            </button>
             <a
               href={whatsappShare}
               target="_blank"
@@ -865,6 +874,9 @@ export default function BaptismInvite() {
         name={form.name}
         ticketId={sentTicket || already?.ticketId}
       />
+
+      {/* Mini modal: método de regalo */}
+      <GiftModal open={isGiftOpen} onClose={() => setIsGiftOpen(false)} />
     </div>
   );
 }
@@ -1232,5 +1244,65 @@ function GlobalStyles() {
         animation: orbit 2.4s ease-in-out infinite;
       }
     `}</style>
+  );
+}
+function GiftModal({ open, onClose }) {
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <button
+        type="button"
+        aria-label="Cerrar"
+        onClick={onClose}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+      />
+
+      <div className="relative w-full max-w-md rounded-3xl border border-pink-200/70 bg-white/70 backdrop-blur-md shadow-2xl p-5 magic-border">
+        <span className="magic-sparkle top-2 left-6" />
+        <span className="magic-sparkle bottom-2 right-8 delay-200" />
+
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-pink-500">
+              Regalo
+            </p>
+            <h3 className="text-xl font-semibold text-pink-700">
+              Método de regalo ✨
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full bg-white/70 hover:bg-white/90 border border-pink-200/70 px-3 py-1 text-sm text-pink-700"
+          >
+            Cerrar
+          </button>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-pink-200/70 bg-white/50 backdrop-blur-md p-4 text-left">
+          <div className="flex items-center gap-3">
+            <span className="text-4xl leading-none">✉️</span>
+            <div>
+              <p className="text-sm text-gray-700">Método de regalo:</p>
+              <p className="text-lg font-extrabold text-purple-700">
+                Sobre sorpresa
+              </p>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-gray-600">¡Gracias por tu cariño! 💖</p>
+        </div>
+
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full rounded-xl bg-pink-600 text-white px-4 py-2 hover:bg-pink-700 transition"
+          >
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
